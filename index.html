@@ -1,1 +1,632 @@
-Hello World
+<!doctype html> <!-- Important: must specify -->
+<html>
+	<head>
+		<meta charset="utf-8"> <!-- Important: rapi-doc uses utf8 characters -->
+		<script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+	</head>
+	<style>
+		table {
+			width: 75%;
+			border-collapse: collapse;
+			margin: 20px auto;
+			font-family: Arial, sans-serif;
+		}
+		th, td {
+			border: 1px solid #ccc;
+			padding: 10px;
+			text-align: left;
+		}
+		th {
+			background-color: #004080;
+			color: white;
+		}
+		tr:nth-child(even) {
+			background-color: #e6f2ff;
+		}
+		tr:nth-child(odd) {
+			background-color: #ffffff;
+
+		}
+		div.custom-text {
+			font-family: Arial, sans-serif;
+			font-size: 18px;
+			/* You can adjust the font size as needed */
+			color: #333; /* Optional: specify the text color */
+		}
+
+        
+    .code-inline {
+        font-family: 'Courier New', Courier, monospace;
+        color: #22863a;
+        font-size: 0.9em;
+        background-color: #f0f0f0;  /* Light gray background */
+        padding: 2px 4px;  /* Small padding around the text */
+        border-radius: 3px;  /* Slightly rounded corners */
+        font-weight: bold;
+    }
+
+    .tab {
+        display: inline-block;
+        width: 2em;
+    }
+</style>
+	<body>
+
+		<rapi-doc 
+			spec-url = "https://raw.githubusercontent.com/Pay-i/EarlyAPIDocumentation/main/api.v1.json"
+			show-curl-before-try="true"
+			render-style = "read"
+			show-header = "false"
+			nav-bg-color="#1C2835"
+			> 
+			<span slot="overview" >
+				<h2>Thank you for being an early tester of Pay-i!</h2>
+				<h3>You are about to test an early version of our GenAI cost observability tools. This documentation will describe Pay-i concepts, functionality, and code to get started. <p />At any time, you can send mail to <a href="support@pay-i.com">support@pay-i.com</a> to report issues, ask questions, or get help.<br/><br/>Please note that as this is an early look at Pay-i, and therefore breaking API changes and account resets may happen with future updates. We will communicate these types of changes ahead of time and coordinate prior to deployment.</h3>
+				<br />
+				<h1>Quickstarts</h1>
+				<h3>We have three Python notebooks that make it very easy to get up and running with the following model providers:
+				<ul>
+					<li>OpenAI</li>
+					<li>Azure OpenAI</li>
+					<li>Anthropic</li>					
+				</ul>
+				You can find the notebooks here: <a href="https://github.com/Pay-i/EarlyAPIDocumentation/tree/main/quickstarts" target="_new">Pay-i Quickstarts</a>.<br/><br/>You will still need to follow the steps in this document to retrieve your auth keys and learn about the features available in this early look.</h3>
+				
+				<br />
+				<h1>Pay-i Concepts</h1>
+				<div class="custom-text">
+					Pay-i provides tools to track, control, and understand costs from GenAI consumption. It automatically and accurately calculates all GenAI costs including for scenarios such as tool use, vision, and streaming, where calculation can often be quite difficult.
+					This section describes the high-level concepts used by all Pay-i workflows.
+					To help with contextualizing the concepts described below, we will use the following scenario:
+				</div>
+				<div class="custom-text">
+					<br />
+					<b>Example Scenario</b>
+					<br />
+					“My GenAI Service” makes a chat completion API call to OpenAI, using the model gpt-4o, on behalf of a premium user, “Jane”, in order to summarize documents.
+					<br />
+					<table>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Pay-i Concept</th>
+								<th>Scenario Section</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1.</td>
+								<td>Category</td>
+								<td>OpenAI</td>
+							</tr>
+							<tr>
+								<td>2.</td>
+								<td>Resource</td>
+								<td>gpt-4o</td>
+							</tr>
+							<tr>
+								<td>3.</td>
+								<td>Request</td>
+								<td>The chat completion API call</td>
+							</tr>
+							<tr>
+								<td>4.</td>
+								<td>Request Tag</td>
+								<td>Summarize Documents</td>
+							</tr>
+							<tr>
+								<td>5.</td>
+								<td>Budget</td>
+								<td>Jane</td>
+							</tr>
+							<tr>
+								<td>6.</td>
+								<td>Budget Tag</td>
+								<td>Premium</td>
+							</tr>
+							<tr>
+								<td>7.</td>
+								<td>Application</td>
+								<td>"My GenAI Service"</td>
+							</tr>
+						</tbody>
+				</table>
+				</div>
+				<br />
+				<div class="custom-text">
+					There are two ways that Pay-i can process such an API call:
+					<ol>
+						<li><b>As a proxy</b>
+							<ol type="a">
+								<li>An application sends the chat completion API call to Pay-i and Pay-i will forward the API call onto its destination (e.g., OpenAI) and return the results.</li>
+								<li>It will automatically calculate the token utilization and costs, even in cases when it is not returned by the API.</li>
+								<li>Pay-i will also augment the returned results with a <a href="#proxy_result">proxy_result</a> object that can be used to determine the exact cost of the call and the status of any related budgets.</li>
+								<li>Pay-i never stores any data from the API calls that it proxies.</li>
+								<li>If you followed the quickstart, then Pay-i is configured as a proxy.</li>
+							</ol>
+						</li>
+						<li><b>As a lookaside</b>
+							<ol type="a">
+								<li>Your application sends the chat completion API call to the destination directly (i.e. to OpenAI) and then reports the token counts and other information to Pay-i.</li>
+								<li>This is done using the Pay-i <a href="#tag--Ingest-Requests">Ingest</a> API.</li>
+							</ol>
+						</li>
+				</ol>
+				This documentation will first cover all the scenarios when using Pay-i as a proxy and will then go over the differences when using Pay-i as a lookaside via the Ingest API. 
+				<h2 id="authentication">Authentication</h2>
+				The first step to using Pay-i is to create an account and sign-in at <a href="https://www.pay-i.com/en/applications">https://www.pay-i.com/en/applications</a>. 
+					Once signed in, you’ll see a button to create a new application:<br /><br />
+					<div style="text-align: center;">
+                        <img src="welcome.png" />
+                    </div><br /><br />
+					After giving the app a name, you’ll be taken to the application dashboard. The name of the app and several icons appear at the top. Click on the key icon.<br /><br />
+					<div style="text-align: center;">
+                        <img src="select_key.png" />
+                    </div><br /><br />
+					This will bring up the API keys that can be used to auth to the Pay-i service. <br /><br />
+					<div style="text-align: center;">
+                        <img src="keys.png" />
+                    </div><br /><br />
+					Pay-i uses an API key model similar to most RESTful services. However, the Pay-i API keys are per application, not per developer. This means that a single key is used to identify both the developer and the specific application in the Pay-i system. 
+					Auth is handled via a standard Authorization: Bearer header, which is passed in for all API calls: <br/><br/>
+					<span class="code-inline">"Authorization": "Bearer &lt;Pay-i key&gt;"</span>
+                <h3 id="sdk_auth">Authentication via OpenAI and Anthropic SDKs</h3>
+                If you are using the Anthropic or OpenAI SDKs, then the SDKs are designed to authenticate to their respective backend services automatically for each API call. Pay-i taps into this behavior to authenticate these calls to the Pay-i service and uses the Header Forwarding feature to pass on the provider authentication, allowing Pay-i to slip seamlessly between your existing API calls without having to refactor.<br/><br/>
+                <b>OpenAI SDK Authentication Example</b><br/><br/>
+                <span class="code-inline">
+                    payi_headers = {<br/>
+                    <span class="tab"></span>"xProxy-Forward-Authorization": "Bearer " + OpenAI_Key<br/>
+                    }<br/>
+                    payi_base_url = "https://apim-payi-prod-eastus.azure-api.net/api/v1/proxy/openai/v1"<br/>
+                    client = OpenAI(<br/>
+                    <span class="tab"></span>api_key=PayI_Key,<br/>
+                    <span class="tab"></span>base_url=payi_base_url,<br/> 
+                    <span class="tab"></span>default_headers=payi_headers<br/>
+                    )
+                </span><br/><br/>
+                <b>Anthropic SDK Authentication Example</b><br/><br/>
+                Pending
+                
+	<h2>Categories and Resources</h2>
+	Pay-i can track costs from any arbitrary source, even beyond GenAI use cases. A category is simply a grouping of resources. Resources have four properties:
+	<ol>
+		<li>Cost per input unit (e.g., the cost for a prompt token for an LLM)</li>
+		<li>The max number of input units (e.g., the largest input prompt supported by the LLM)</li>
+		<li>Cost per output unit</li>
+		<li>The max number of output units</li>
+	</ol>
+	For popular GenAI providers, Pay-i maintains the categories and resources automatically. For example, Pay-i will automatically add new models (resources) into the categories for OpenAI, Anthropic, Gemini, etc. as they release them. Further, the unit prices for all resources in managed categories are constantly kept up to date. <br /><br />
+	Pay-i keeps a historic record as resource prices change, allowing you to see the impact on your business over time. 
+	Categories that are managed by Pay-i are prefixed with “system.”. For this early preview, custom category/resource definitions are not yet available, but they are coming soon. <br /><br />
+	<b>Example Categories:</b>
+	<ul>
+		<li>system.openai</li>
+		<li>system.anthropic</li>
+	</ul>
+
+	<b>Example Resources:</b>
+	<ul>
+		<li>gpt-4-0613</li>
+		<li>claude-3-sonnet-20240229</li>
+	</ul>
+
+	<h2>Requests</h2>
+	Any attempted transaction, such as making an API call to a GenAI service, is considered a “request”. They are called requests, and not transactions, because budgets can block a request. More on this in the <a href="#tag--Budgets">Budgets</a> section.
+	<h3>Making a Request</h3>
+	Making a request is the same as sending a standard API call to a GenAI provider, such as getting a chat completion from OpenAI. Pay-i will automatically calculate the cost of these calls, including the latest prices and all the tricky nuances, and will augment the response from the AI provider with a <a href="#proxy_result">proxy_result</a> object telling you exactly how much was spent in the request. <br /><br />
+	The cost of the call, as charged by the AI model’s host (e.g, OpenAI), is called the “base” cost. <br /><br />
+
+	Pay-i also allows you to send additional, optional parameters which are used to categorize and/or control the costs associated with the API calls.
+
+    <h3 id="sending_custom_headers">Sending Custom Headers</h3>
+    To leverage several of Pay-i’s features for understanding and controlling costs, additional headers, defined in the sections to follow, must be sent in when making requests. 
+    Both OpenAI and Anthropic support an “extra_headers” parameter in their SDKs which allows for these headers to be sent in as part of the natural use of their APIs.<br/><br/>
+    <b>OpenAI Custom Header Example</b>
+    <br/><br/>
+    <span class="code-inline">
+        response = client.chat.completions.create(<br/>
+        <span class="tab"></span>model=”gpt-4o”, <br/>
+        <span class="tab"></span>messages=messages, <br/>
+        <span class="tab"></span>extra_headers=payi_headers<br/>
+        )
+    </span>
+    <br/><br/>
+    <b>Anthropic Custom Header Example</b>
+    <br/><br/>
+    <span class="code-inline">
+        message = client.messages.create(<br/>
+        <span class="tab"></span>model="claude-3-sonnet-20240229",<br/>
+        <span class="tab"></span>max_tokens=500,<br/>
+        <span class="tab"></span>system=system,<br/>
+        <span class="tab"></span>messages=messages,<br/>
+        <span class="tab"></span>extra_headers=payi_headers<br/>
+        )
+    </span>
+    <br/><br/>
+
+	<h3 id="request_tags">Request Tags</h3>
+	Tags are free form, custom strings that can be defined and included in API calls for later reference. There are two types of tags in Pay-i: <a href="#request_tags">Request Tags</a> and <a href="#tag--Budget-Tags">Budget Tags</a>.<br /><br /> 
+	Request Tags are sent as part of individual API requests and can be used to associate your AI costs with specific scenarios, or use cases, in your product.<br /><br />
+	Let’s imagine you need to make several API calls to different AI models to accomplish the “Document Summarization” scenario. By tagging all of these requests, Pay-i will associate the costs of these calls to that scenario, and will give you controls to view and pivot the data accordingly on the Pay-i dashboard. <br /><br />
+		<div style="text-align: center;">
+			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_pareto.png?raw=true"/><br />
+			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_sankey.png?raw=true"/>
+		</div>
+
+	<br /><br />
+	You can also use Request Tags to understand the cost of a specific sequence of AI requests, by giving them all a unique tag that you can filter by in the Pay-i dashboard. <br /><br />
+	When sending requests, you can specify any number of Request Tags using the optional header <b>xProxy-Request-Tags</b>, with a comma-separated list. Tags values may contain alphanumeric and underscore characters.
+
+    <h3 id="header_forwarding">Header Forwarding</h3>
+    Some category providers (e.g., OpenAI) may expose new features or settings that require you to send them additional headers as part of making a request. When using Pay-i as a proxy, any headers sent to the Pay-i service with the “xProxy-Forward-” prefix are forwarded to the category provider as-is, without inspection or retention.<br/><br/>
+    For example, if you needed to send a header named “BatchMode” with the value “True”, you would include a header to Pay-i as follows:<br/><br/>
+    <span class="code-inline">“xProxy-Forward-BatchMode”: “True”</span><br/><br/>
+    You can pass this in using the <a href="#sending_custom_headers">extra_headers</a> or <a href="#sdk_auth">default_headers</a> methods.<br/><br/>
+	
+    <h1>Understanding Results from the Pay-i Service</h1>
+    <h2 id="proxy_result">The proxy_result Object</h2>
+	When a request is completed, either via the Pay-i proxy or via ingest, a proxy_result object is usually returned. The proxy_result object is returned whenever a request is made successfully (HTTP 200) and under certain failure conditions, such as when a budget blocks a request (HTTP 400). <br/><br/>
+    When Pay-i is a proxy, the proxy_result object appears as a separate JSON object alongside the normal return from the AI model provider. When streaming, it is provided in the last streamed chunk. When using ingest, it is the only return from the Pay-i service. <br/><br/>
+    It contains cost and/or budget information about the request and indicates when a budget blocked a request from completing. It has a slightly different structure depending on whether the request succeeded or failed, because failed requests have no cost. <br/><br/>
+    <b>Example Successful Request (200)</b><br/><br/>
+    <span class="code-inline">
+        "proxy_result": {<br/>
+        <span class="tab"></span>"request_id": "40000616-0000-7000-b63f-84710c7967bb",<br/>
+        <span class="tab"></span>"request_tags": ["all_used_tags_are_returned_for_confirmation"],<br/>
+        <span class="tab"></span>"budgets": {<br/>
+        <span class="tab"></span><span class="tab"></span>"cde4836a-9d2e-4179-5146-08dc8c8ba991": {<br/>
+        <span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Exceeded"<br/>
+        <span class="tab"></span><span class="tab"></span>},<br/>
+        <span class="tab"></span><span class="tab"></span>"a21163d1-b123-4652-5147-08dc8c8ba991": {<br/>
+        <span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Ok"<br/>
+        <span class="tab"></span><span class="tab"></span>}<br/>
+        <span class="tab"></span>},<br/>
+        <span class="tab"></span>"cost": {<br/>
+        <span class="tab"></span><span class="tab"></span>"currency": "USD",<br/>
+        <span class="tab"></span><span class="tab"></span>"input": {<br/>
+        <span class="tab"></span><span class="tab"></span><span class="tab"></span>"base": "0.00028"<br/>
+        <span class="tab"></span><span class="tab"></span>},<br/>
+        <span class="tab"></span><span class="tab"></span>"output": {<br/>
+        <span class="tab"></span><span class="tab"></span><span class="tab"></span>"base": "0.01962"<br/>
+        <span class="tab"></span><span class="tab"></span>},<br/>
+        <span class="tab"></span><span class="tab"></span>"total": {<br/>
+        <span class="tab"></span><span class="tab"></span><span class="tab"></span>"base": "0.0199"<br/>
+        <span class="tab"></span><span class="tab"></span>}<br/>
+        <span class="tab"></span>}<br/>
+        }
+    </span><br/><br/>
+    <b>Example Unsuccessful Request (400)</b><br/><br/>
+    <span class="code-inline">
+    "proxy_result": {<br/>
+    <span class="tab"></span>"request_id": "40000b9e-0000-7200-b63f-84710c7967bb",<br/>
+    <span class="tab"></span>"request_tags": ["all_used_tags_are_returned_for_confirmation"],<br/>
+    <span class="tab"></span>"budgets": {<br/>
+    <span class="tab"></span><span class="tab"></span>"6e6ae496-3239-46b6-5144-08dc8c8ba991": {<br/>
+    <span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Blocked"<br/>
+    <span class="tab"></span><span class="tab"></span>},<br/>
+    <span class="tab"></span><span class="tab"></span>"07051e47-4051-44e2-5145-08dc8c8ba991": {<br/>
+    <span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Ok"<br/>
+    <span class="tab"></span><span class="tab"></span>}<br/>
+    <span class="tab"></span>},<br/>
+    <span class="tab"></span>"blocked_budget_ids": [<br/>
+    <span class="tab"></span><span class="tab"></span>"6e6ae496-3239-46b6-5144-08dc8c8ba991"<br/>
+    <span class="tab"></span>]<br/>
+    }
+    </span>
+    <br/><br/>
+    <h3>proxy_result Fields</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Field</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1.</td>
+                <td>Request_id</td>
+                <td>A GUID that can later be used to reference this specific request for debugging.</td>
+            </tr>
+            <tr>
+                <td>2.</td>
+                <td>Budgets</td>
+                <td>
+                    Dictionary containing all budget IDs that were passed in as part of the request, and their state after the request was completed. 
+                    <br><br>
+                    Valid states are:
+                    <ul>
+                        <li><strong>Ok</strong>
+                            <ul>
+                                <li>The amount spent is still below the budget's maximum.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Exceeded</strong>
+                            <ul>
+                                <li>The amount spent has exceeded the budget's maximum.</li>
+                                <li>This field can be used to take custom action within your application to limit additional AI use or upsell your customer.</li>
+                                <li>If this budget is configured to block requests beyond its threshold, then it will now block any future requests.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Blocked</strong>
+                            <ul>
+                                <li>This budget has blocked the request.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>3.</td>
+                <td>Cost</td>
+                <td>
+                    The breakdown of how much this request costs across input and output. 
+                    <br><br>
+                    When a request has failed, usually due to being blocked by a budget, there is no cost and therefore these fields are not returned. 
+                    <br><br>
+                    Soon, Pay-i will incorporate your charging mechanics and business model to provide revenue and gross profit calculations here as well.
+                </td>
+            </tr>
+            <tr>
+                <td>4.</td>
+                <td>Blocked_budget_ids</td>
+                <td>
+                    If a request is blocked by one or more budgets, then this array contains the list of budget IDs responsible for blocking the call. 
+                    <br><br>
+                    This array is only present if the call was blocked by one or more budgets.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br /><br/>
+    <h2>Handling Errors</h2>
+    Pending
+	</div>
+	</span>
+	<span slot="tag--Budgets">
+		<div class="custom-text">
+			Budgets are used to control your GenAI traffic, costs, and to associate requests to users or groups of users. <br /><br />
+			Budgets are created with a maximum USD value (e.g., $10.00), and a configuration for what happens when the budget is near or has reached its maximum.<br /><br />
+			After creating a budget, the API will return a Budget-ID, which is used when making requests. You use the optional header <b>xProxy-Budget-IDs</b> to specify any number of Budget-IDs with a comma-separated list, which will be evaluated before processing a request.<br /><br />
+			When you make a request with one or more Budget-IDs, those budgets are evaluated to see if their configuration allows the request to proceed. Then, if none of the budgets block the request, the request becomes a normal API call to the GenAI provider.<br /><br />
+			After a request is completed, the total cost of that request is added to each budget’s “spent” value.<br /><br />
+			Budgets also support tagging so that you can reason over users or groups of users. See the <a href="#tag--Budget-Tags">Budget Tags</a> section for more.<br /><br />
+			<b>Example</b><br />
+			“My GenAI Service” makes a chat completion API call to OpenAI, on behalf of a premium user, “Jane”. Jane’s budget, which has a maximum value of $10.00, is passed in as part of the request. Only $6.50 has been spent on the budget, so Pay-i allows the request to proceed. The total cost of the completed API call is $0.50. Jane’s budget is updated to have spent $7.00.
+			<h3>Overrun</h3>
+			Some budget configurations allow the total amount spent to exceed the maximum value of the budget. This is called “overrun” and is tracked and reported in the Pay-i dashboard and in the budget API. 
+			<h3>Budget Configurations</h3>
+			Budget configurations define what happens when a budget is at or near its maximum value. For this early preview, there are three supported configurations:
+			<h4>1. Liberal Allow</h4>
+			<ol type="a">
+				<li>The budget will allow all requests to proceed, even if the maximum amount has been reached.</li>
+				<li>Requests before the budget maximum is reached will return with the “ok” state.</li>
+				<li>The request which causes the budget to exceed its maximum will return with the “exceeded” state, as will all future requests for this budget.</li>
+				<li>The overrun value is updated for each subsequent call.</li>
+			</ol>
+			<b>Liberal Allow Example</b>
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Spent – Before</th>
+						<th>Max</th>
+						<th>Request Cost</th>
+						<th>State</th>
+						<th>Spent – After</th>
+						<th>Overrun</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1.</td>
+						<td>$9.80</td>
+						<td>$10.00</td>
+						<td>$0.19</td>
+						<td>Ok</td>
+						<td>$9.99</td>
+						<td>$0.00</td>
+					</tr>
+					<tr>
+						<td>2.</td>
+						<td>$9.99</td>
+						<td>$10.00</td>
+						<td>$0.30</td>
+						<td>Exceeded</td>
+						<td>$10.29</td>
+						<td>$0.29</td>
+					</tr>
+					<tr>
+						<td>3.</td>
+						<td>$10.29</td>
+						<td>$10.00</td>
+						<td>$0.50</td>
+						<td>Exceeded</td>
+						<td>$10.79</td>
+						<td>$0.79</td>
+					</tr>
+				</tbody>
+			</table>
+			<h4>2. Liberal Block</h4>
+			<ol type="a">
+				<li>The budget will return with the “ok” state and allow all requests to proceed until the amount spent has reached or exceeded the budget maximum.</li>
+				<li>The request which causes the budget to exceed its maximum will return with the “exceeded” state. This request may carry overrun costs.</li>
+				<li>All requests made after the budget has exceeded the maximum will be blocked, and the budget will return with the “blocked” state.</li>
+			</ol>
+			<b>Liberal Block Example</b>
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Spent – Before</th>
+						<th>Max</th>
+						<th>Request Cost</th>
+						<th>State</th>
+						<th>Spent – After</th>
+						<th>Overrun</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1.</td>
+						<td>$9.80</td>
+						<td>$10.00</td>
+						<td>$0.19</td>
+						<td>Ok</td>
+						<td>$9.99</td>
+						<td>$0.00</td>
+					</tr>
+					<tr>
+						<td>2.</td>
+						<td>$9.99</td>
+						<td>$10.00</td>
+						<td>$0.30</td>
+						<td>Exceeded</td>
+						<td>$10.29</td>
+						<td>$0.29</td>
+					</tr>
+					<tr>
+						<td>3.</td>
+						<td>$10.29</td>
+						<td>$10.00</td>
+						<td>-</td>
+						<td>Blocked</td>
+						<td>$10.29</td>
+						<td>$0.29</td>
+					</tr>
+				</tbody>
+			</table>
+			<h4>3. Conservative Block</h4>
+			<ol type="a">
+				<li>The budget will block any request which could cause the budget to exceed its maximum.</li>
+				<li>The state will always return with either “ok” or “blocked”, and the overrun will always be $0.00.</li>
+				<li>Pay-i makes penny-perfect calculations to ensure that the budget will never be exceeded, even when multiple requests are sent in parallel across different categories and resources.</li>
+				<li>Note that conservative block budgets can only be used for categories/resources where Pay-i can calculate the cost before sending the request.</li>
+			</ol>
+			<b>Conservative Block Example</b>
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Spent – Before</th>
+						<th>Max</th>
+						<th>Max Computed Request Cost</th>
+						<th>Request Cost</th>
+						<th>State</th>
+						<th>Spent – After</th>
+						<th>Overrun</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1.</td>
+						<td>$9.50</td>
+						<td>$10.00</td>
+						<td>$0.48</td>
+						<td>$0.19</td>
+						<td>Ok</td>
+						<td>$9.69</td>
+						<td>$0.00</td>
+					</tr>
+					<tr>
+						<td>2.</td>
+						<td>$9.69</td>
+						<td>$10.00</td>
+						<td>$0.48</td>
+						<td>-</td>
+						<td>Blocked</td>
+						<td>$9.69</td>
+						<td>$0.00</td>
+					</tr>
+					<tr>
+						<td>3.</td>
+						<td>$9.69</td>
+						<td>$10.00</td>
+						<td>$0.48</td>
+						<td>-</td>
+						<td>Blocked</td>
+						<td>$9.69</td>
+						<td>$0.00</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</span>
+
+	<span slot="tag--Budget-Tags">
+		<div class="custom-text">
+			Tags can be associated with budgets in much the same way as Requests. Budget tags are meant to represent categories of users (e.g., free, premium, enterprise), or groups of users, such as departments, customer segments, or specific accounts (e.g., marketing, DevOps, enterprise-account#3).<br /><br />
+			If a request is made with any Budget-IDs, the costs associated with that request are automatically associated with all tags on the provided Budget-IDs, and are viewable and pivotable in the Pay-i dashboard.
+			<br />
+			<div style="text-align: center;">
+                <img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_budget_tag.png?raw=true" />
+            </div>
+		</div>
+	</span>
+	<span slot="tag--Ingest-Requests">
+		<div class="custom-text">
+			Pay-i never stores any data about the data from the API calls it proxies. However, if you can’t use Pay-i as a proxy, you can still record data about your transactions by using the Ingest API. <br /><br />
+			The Ingest API takes the following inputs:
+			<table>
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Input</th>
+						<th>Example</th>
+						<th>Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1.</td>
+						<td>Category</td>
+						<td>“system.openai”</td>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<td>2.</td>
+						<td>Resource</td>
+						<td>“gpt-4-0613”</td>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<td>3.</td>
+						<td>Input Units</td>
+						<td>156</td>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<td>4.</td>
+						<td>Output Units</td>
+						<td>453</td>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<td>5.</td>
+						<td>Request Tags</td>
+						<td>[“code_generation”, “chat_helper”]</td>
+						<td>No</td>
+					</tr>
+					<tr>
+						<td>6.</td>
+						<td>Budget IDs</td>
+						<td>[“Budget_ID1”, “Budget_ID2”]</td>
+						<td>No</td>
+					</tr>
+				</tbody>
+		</table>
+			When using ingest, Pay-i will still calculate the costs based on the reported units and associate the data with tags and budgets for later use. <br /><br />
+			However, Pay-i cannot automatically determine the category or resource, and cannot calculate the unit counts since it never sees the API call. <br /><br /> 
+			Additionally, Liberal Block and Conservative Block budgets are not allowed to be passed in as Budget IDs for ingest calls, since, by definition, they cannot block the API call from proceeding. 
+
+		</div>
+	</span>
+
+	<img
+		slot="nav-logo"
+		src="pay-i-logo.webp"
+	/>
+	</rapi-doc>
+	</body>
+</html>
