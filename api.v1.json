@@ -5,11 +5,6 @@
     "description": "Pay-i API",
     "version": "v1"
   },
-  "servers": [
-    {
-      "url": "https://apim-payi-prod-eastus.azure-api.net",
-    }
-  ],
   "paths": {
     "/api/v1/proxy/anthropic/v1/messages": {
       "post": {
@@ -50,16 +45,6 @@
         "responses": {
           "200": {
             "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.AnthropicResponse"
-                }
-              }
-            }
-          },
-          "207": {
-            "description": "Multi-Status",
             "content": {
               "application/json": {
                 "schema": {
@@ -141,16 +126,6 @@
               }
             }
           },
-          "207": {
-            "description": "Multi-Status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -224,16 +199,6 @@
               }
             }
           },
-          "207": {
-            "description": "Multi-Status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -299,16 +264,6 @@
         "responses": {
           "200": {
             "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
-          "207": {
-            "description": "Multi-Status",
             "content": {
               "application/json": {
                 "schema": {
@@ -1104,16 +1059,6 @@
               }
             }
           },
-          "207": {
-            "description": "Multi-Status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1179,16 +1124,6 @@
               }
             }
           },
-          "207": {
-            "description": "Multi-Status",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -1246,16 +1181,6 @@
         "responses": {
           "200": {
             "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.OpenAIResponse"
-                }
-              }
-            }
-          },
-          "207": {
-            "description": "Multi-Status",
             "content": {
               "application/json": {
                 "schema": {
@@ -2013,6 +1938,11 @@
     {
       "name": "Ingest Requests",
       "description": "Ingest Requests"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://apim-payi-prod-eastus.azure-api.net"
     }
   ],
   "security": [
