@@ -1442,30 +1442,21 @@
         "additionalProperties": false
       },
       "PayI.BudgetManagement.Models.CostData": {
+        "required": [
+          "input",
+          "output",
+          "total"
+        ],
         "type": "object",
         "properties": {
-          "inputCost": {
-            "$ref": "#/components/schemas/PayI.BudgetManagement.Models.CostDataDetails"
+          "input": {
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           },
-          "outputCost": {
-            "$ref": "#/components/schemas/PayI.BudgetManagement.Models.CostDataDetails"
+          "output": {
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           },
-          "totalCost": {
-            "$ref": "#/components/schemas/PayI.BudgetManagement.Models.CostDataDetails"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PayI.BudgetManagement.Models.CostDataDetails": {
-        "type": "object",
-        "properties": {
-          "base": {
-            "type": "number",
-            "format": "double"
-          },
-          "overrun_base": {
-            "type": "number",
-            "format": "double"
+          "total": {
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           }
         },
         "additionalProperties": false
@@ -1785,6 +1776,24 @@
         },
         "additionalProperties": false
       },
+      "PayI.Common.Models.BudgetManagement.CostDetails": {
+        "required": [
+          "base"
+        ],
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "number",
+            "format": "double"
+          },
+          "overrun_base": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PayI.Common.Models.ProxyApiError": {
         "required": [
           "error_code",
@@ -1807,26 +1816,6 @@
         },
         "additionalProperties": false
       },
-      "PayI.Common.Models.ProxyResult.BudgetStatus": {
-        "type": "object",
-        "properties": {
-          "state": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PayI.Common.Models.ProxyResult.CostDetails": {
-        "type": "object",
-        "properties": {
-          "base": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "PayI.Common.Models.ProxyResult.FailedProxyResult": {
         "type": "object",
         "properties": {
@@ -1844,7 +1833,7 @@
           "budgets": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.BudgetStatus"
+              "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.ProxyBudgetStatus"
             },
             "nullable": true
           },
@@ -1858,6 +1847,16 @@
         },
         "additionalProperties": false
       },
+      "PayI.Common.Models.ProxyResult.ProxyBudgetStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PayI.Common.Models.ProxyResult.RequestCost": {
         "type": "object",
         "properties": {
@@ -1866,13 +1865,13 @@
             "nullable": true
           },
           "input": {
-            "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.CostDetails"
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           },
           "output": {
-            "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.CostDetails"
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           },
           "total": {
-            "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.CostDetails"
+            "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
           }
         },
         "additionalProperties": false
@@ -1894,7 +1893,7 @@
           "budgets": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.BudgetStatus"
+              "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.ProxyBudgetStatus"
             },
             "nullable": true
           },
@@ -1942,7 +1941,7 @@
   ],
   "servers": [
     {
-      "url": "https://apim-payi-prod-eastus.azure-api.net"
+      "url": "https://api.pay-i.com"
     }
   ],
   "security": [
