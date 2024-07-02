@@ -1,8 +1,10 @@
 <!doctype html> <!-- Important: must specify -->
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8"> <!-- Important: rapi-doc uses utf8 characters -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+		<title>Pay-i Early Look Documentation</title>
 	</head>
 	<style>
 		table {
@@ -58,6 +60,7 @@
 			render-style = "read"
 			show-header = "false"
 			nav-bg-color="#1C2835"
+			theme="light"
 			> 
 			<span slot="overview" >
 				<h2>Thank you for being an early tester of Pay-i!</h2>
@@ -157,15 +160,15 @@
 				The first step to using Pay-i is to create an account and sign-in at <a href="https://www.pay-i.com/en/applications">https://www.pay-i.com/en/applications</a>. 
 					Once signed in, you’ll see a button to create a new application:<br /><br />
 					<div style="text-align: center;">
-                        <img src="welcome.png" />
+                        <img src="welcome.png" alt="Create a new application in Pay-i" />
                     </div><br /><br />
 					After giving the app a name, you’ll be taken to the application dashboard. The name of the app and several icons appear at the top. Click on the key icon.<br /><br />
 					<div style="text-align: center;">
-                        <img src="select_key.png" />
+                        <img src="select_key.png" alt="Click the key to see application keys"/>
                     </div><br /><br />
 					This will bring up the API keys that can be used to auth to the Pay-i service. <br /><br />
 					<div style="text-align: center;">
-                        <img src="keys.png" />
+                        <img src="keys.png" alt="See application keys"/>
                     </div><br /><br />
 					Pay-i uses an API key model similar to most RESTful services. However, the Pay-i API keys are per application, not per developer. This means that a single key is used to identify both the developer and the specific application in the Pay-i system. 
 					Auth is handled via a standard Authorization: Bearer header, which is passed in for all API calls: <br/><br/>
@@ -249,8 +252,8 @@
 	Request Tags are sent as part of individual API requests and can be used to associate your AI costs with specific scenarios, or use cases, in your product.<br /><br />
 	Let’s imagine you need to make several API calls to different AI models to accomplish the “Document Summarization” scenario. By tagging all of these requests, Pay-i will associate the costs of these calls to that scenario, and will give you controls to view and pivot the data accordingly on the Pay-i dashboard. <br /><br />
 		<div style="text-align: center;">
-			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_pareto.png?raw=true"/><br />
-			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_sankey.png?raw=true"/>
+			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_pareto.png?raw=true" alt="Example pareto chart"/><br />
+			<img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_sankey.png?raw=true" alt="Example sankey chart"/>
 		</div>
 
 	<br /><br />
@@ -333,7 +336,7 @@
                 <td>2.</td>
                 <td>Budgets</td>
                 <td>
-                    Dictionary containing all budget IDs that were passed in as part of the request, and their state after the request was completed. 
+                    Dictionary containing all budget IDs that were passed in as part of the request, and their state after the request was completed. Learn more about Budgets in the <a href="#tag--Budgets">Budgets</a> section.
                     <br><br>
                     Valid states are:
                     <ul>
@@ -383,6 +386,83 @@
     <h2>Handling Errors</h2>
     Pending
 	</div>
+	<br/><br/>
+	<h2>Supported Providers and Models</h2>
+	<table>
+        <thead>
+            <tr>
+                <th>Aggregated Resource</th>
+                <th>Resources</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+			<tr>
+                <td>gpt-4o</td>
+                <td>gpt-4o-2024-05-13, gpt-4o</td>
+            </tr>
+            <tr>
+                <td>gpt-3.5-turbo</td>
+                <td>gpt-35-turbo-0125, gpt-35-turbo-1106, gpt-35-turbo-0613, gpt-35-turbo-0301, gpt-3.5-turbo, gpt-3.5-turbo-0125, gpt-3.5-turbo-1106, gpt-3.5-turbo-0301, gpt-3.5-turbo-0613</td>
+            </tr>
+            <tr>
+                <td>gpt-3.5-turbo-16k</td>
+                <td>gpt-35-turbo-16k-0613, gpt-3.5-turbo-16k</td>
+            </tr>
+            <tr>
+                <td>gpt-4</td>
+                <td>gpt-4-0125-preview, gpt-4-1106-preview, gpt-4-0613, gpt-4, gpt-4-0314</td>
+            </tr>
+            <tr>
+                <td>gpt-4-32k</td>
+                <td>gpt-4-32k-0613, gpt-4-32k, gpt-4-32k-0314</td>
+            </tr>
+            <tr>
+                <td>gpt-4-turbo</td>
+                <td>gpt-4-turbo-2024-04-09, gpt-4-turbo, gpt-4-turbo-preview</td>
+            </tr>
+            <tr>
+                <td>gpt-4-vision</td>
+                <td>gpt-4-vision-preview, gpt-4-1106-vision-preview</td>
+            </tr>
+            <tr>
+                <td>text-embedding-3-large</td>
+                <td>text-embedding-3-large-1, text-embedding-3-large</td>
+            </tr>
+            <tr>
+                <td>text-embedding-3-small</td>
+                <td>text-embedding-3-small-1, text-embedding-3-small</td>
+            </tr>
+            <tr>
+                <td>text-embedding-ada-002</td>
+                <td>text-embedding-ada-002-1, text-embedding-ada-002-2, text-embedding-ada-002</td>
+            </tr>
+            <tr>
+                <td>dall-e-2</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>dall-e-3</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>claude-3-opus</td>
+                <td>claude-3-opus-20240229</td>
+            </tr>
+            <tr>
+                <td>claude-3-sonnet</td>
+                <td>claude-3-sonnet-20240229</td>
+            </tr>
+            <tr>
+                <td>claude-3-5-sonnet</td>
+                <td>claude-3-5-sonnet-20240620</td>
+            </tr>
+            <tr>
+                <td>claude-3-haiku</td>
+                <td>claude-3-haiku-20240307</td>
+            </tr>
+        </tbody>
+    </table>
 	</span>
 	<span slot="tag--Budgets">
 		<div class="custom-text">
@@ -560,7 +640,7 @@
 			If a request is made with any Budget-IDs, the costs associated with that request are automatically associated with all tags on the provided Budget-IDs, and are viewable and pivotable in the Pay-i dashboard.
 			<br />
 			<div style="text-align: center;">
-                <img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_budget_tag.png?raw=true" />
+                <img src="https://github.com/Pay-i/EarlyAPIDocumentation/blob/main/example_budget_tag.png?raw=true" alt="Example Pareto Chart by Budget Tag" />
             </div>
 		</div>
 	</span>
@@ -623,10 +703,7 @@
 		</div>
 	</span>
 
-	<img
-		slot="nav-logo"
-		src="pay-i-logo.webp"
-	/>
+	<img slot="nav-logo" src="pay-i-logo.webp" alt="Pay-i Logo"/>
 	</rapi-doc>
 	</body>
 </html>
