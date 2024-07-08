@@ -143,7 +143,7 @@
 							<ol type="a">
 								<li>An application sends the chat completion API call to Pay-i and Pay-i will forward the API call onto its destination (e.g., OpenAI) and return the results.</li>
 								<li>It will automatically calculate the token utilization and costs, even in cases when it is not returned by the API.</li>
-								<li>Pay-i will also augment the returned results with a <a href="#proxy_result">proxy_result</a> object that can be used to determine the exact cost of the call and the status of any related budgets.</li>
+								<li>Pay-i will also augment the returned results with a <a href="#xproxy_result">xproxy_result</a> object that can be used to determine the exact cost of the call and the status of any related budgets.</li>
 								<li>Pay-i never stores any data from the API calls that it proxies.</li>
 								<li>If you followed the quickstart, then Pay-i is configured as a proxy.</li>
 							</ol>
@@ -216,7 +216,7 @@
 	<h2>Requests</h2>
 	Any attempted transaction, such as making an API call to a GenAI service, is considered a “request”. They are called requests, and not transactions, because budgets can block a request. More on this in the <a href="#tag--Budgets">Budgets</a> section.
 	<h3>Making a Request</h3>
-	Making a request is the same as sending a standard API call to a GenAI provider, such as getting a chat completion from OpenAI. Pay-i will automatically calculate the cost of these calls, including the latest prices and all the tricky nuances, and will augment the response from the AI provider with a <a href="#proxy_result">proxy_result</a> object telling you exactly how much was spent in the request. <br /><br />
+	Making a request is the same as sending a standard API call to a GenAI provider, such as getting a chat completion from OpenAI. Pay-i will automatically calculate the cost of these calls, including the latest prices and all the tricky nuances, and will augment the response from the AI provider with a <a href="#xproxy_result">xproxy_result</a> object telling you exactly how much was spent in the request. <br /><br />
 	The cost of the call, as charged by the AI model’s host (e.g, OpenAI), is called the “base” cost. <br /><br />
 
 	Pay-i also allows you to send additional, optional parameters which are used to categorize and/or control the costs associated with the API calls.
@@ -267,13 +267,13 @@
     You can pass this in using the <a href="#sending_custom_headers">extra_headers</a> or <a href="#sdk_auth">default_headers</a> methods.<br/><br/>
 	
     <h1>Understanding Results from the Pay-i Service</h1>
-    <h2 id="proxy_result">The proxy_result Object</h2>
-	When a request is completed, either via the Pay-i proxy or via ingest, a proxy_result object is usually returned. The proxy_result object is returned whenever a request is made successfully (HTTP 200) and under certain failure conditions, such as when a budget blocks a request (HTTP 400). <br/><br/>
-    When Pay-i is a proxy, the proxy_result object appears as a separate JSON object alongside the normal return from the AI model provider. When streaming, it is provided in the last streamed chunk. When using ingest, it is the only return from the Pay-i service. <br/><br/>
+    <h2 id="xproxy_result">The xproxy_result Object</h2>
+	When a request is completed, either via the Pay-i proxy or via ingest, a xproxy_result object is usually returned. The xproxy_result object is returned whenever a request is made successfully (HTTP 200) and under certain failure conditions, such as when a budget blocks a request (HTTP 400). <br/><br/>
+    When Pay-i is a proxy, the xproxy_result object appears as a separate JSON object alongside the normal return from the AI model provider. When streaming, it is provided in the last streamed chunk. When using ingest, it is the only return from the Pay-i service. <br/><br/>
     It contains cost and/or budget information about the request and indicates when a budget blocked a request from completing. It has a slightly different structure depending on whether the request succeeded or failed, because failed requests have no cost. <br/><br/>
     <b>Example Successful Request (200)</b><br/><br/>
     <span class="code-inline">
-        "proxy_result": {<br/>
+        "xproxy_result": {<br/>
         <span class="tab"></span>"request_id": "40000616-0000-7000-b63f-84710c7967bb",<br/>
         <span class="tab"></span>"request_tags": ["all_used_tags_are_returned_for_confirmation"],<br/>
         <span class="tab"></span>"budgets": {<br/>
@@ -300,7 +300,7 @@
     </span><br/><br/>
     <b>Example Unsuccessful Request (400)</b><br/><br/>
     <span class="code-inline">
-    "proxy_result": {<br/>
+    "xproxy_result": {<br/>
     <span class="tab"></span>"request_id": "40000b9e-0000-7200-b63f-84710c7967bb",<br/>
     <span class="tab"></span>"request_tags": ["all_used_tags_are_returned_for_confirmation"],<br/>
     <span class="tab"></span>"budgets": {<br/>
@@ -317,7 +317,7 @@
     }
     </span>
     <br/><br/>
-    <h3>proxy_result Fields</h3>
+    <h3>xproxy_result Fields</h3>
     <table>
         <thead>
             <tr>
@@ -329,12 +329,12 @@
         <tbody>
             <tr>
                 <td>1.</td>
-                <td>Request_id</td>
-                <td>A GUID that can later be used to reference this specific request for debugging.</td>
+                <td>request_id</td>
+                <td>An identifier that can later be used to reference this specific request for debugging.</td>
             </tr>
             <tr>
                 <td>2.</td>
-                <td>Budgets</td>
+                <td>budgets</td>
                 <td>
                     Dictionary containing all budget IDs that were passed in as part of the request, and their state after the request was completed. Learn more about Budgets in the <a href="#tag--Budgets">Budgets</a> section.
                     <br><br>
@@ -362,7 +362,7 @@
             </tr>
             <tr>
                 <td>3.</td>
-                <td>Cost</td>
+                <td>cost</td>
                 <td>
                     The breakdown of how much this request costs across input and output. 
                     <br><br>
@@ -373,7 +373,7 @@
             </tr>
             <tr>
                 <td>4.</td>
-                <td>Blocked_budget_ids</td>
+                <td>blocked_budget_ids</td>
                 <td>
                     If a request is blocked by one or more budgets, then this array contains the list of budget IDs responsible for blocking the call. 
                     <br><br>
@@ -383,10 +383,144 @@
         </tbody>
     </table>
     <br /><br/>
+
     <h2>Handling Errors</h2>
-    Pending
-	</div>
-	<br/><br/>
+    When Pay-i returns an HTTP 4xx status code the body will contain the following properties. statusCode and message properties are always returned while 
+	xproxy_error and xproxy_result are optional and their presence is dependent on the error and endpoint being called. These properties are in addition 
+	to the potential error response values the model provider has returned./br> 
+	
+	</br></br>
+    <span class="code-inlne">
+        {<br/>
+        <span class="tab"></span>"statusCode": 400<br/>
+        <span class="tab"></span>"message": "Bad Request"<br/>
+		<span class="tab"></span>"xproxy_error": {<br/>
+		<span class="tab"></span><span class="tab"></span>"code": "not_enough_budget",<br/>
+		<span class="tab"></span><span class="tab"></span>"message": "Insufficient budget for the requested operation",<br/>
+		<span class="tab"></span>},<br/>
+		<span class="tab"></span>"xproxy_result": {<br/>
+		<span class="tab"></span><span class="tab"></span>"request_id": "40000b9e-0000-7200-b63f-84710c7967bb",<br/>
+		<span class="tab"></span><span class="tab"></span>"request_tags": ["all_used_tags_are_returned_for_confirmation"],<br/>
+		<span class="tab"></span><span class="tab"></span>"budgets": {<br/>
+		<span class="tab"></span><span class="tab"></span><span class="tab"></span>"6e6ae496-3239-46b6-5144-08dc8c8ba991": {<br/>
+		<span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Blocked"<br/>
+		<span class="tab"></span><span class="tab"></span>},<br/>
+		<span class="tab"></span><span class="tab"></span>"07051e47-4051-44e2-5145-08dc8c8ba991": {<br/>
+		<span class="tab"></span><span class="tab"></span><span class="tab"></span>"state": "Ok"<br/>
+		<span class="tab"></span><span class="tab"></span>}<br/>
+		<span class="tab"></span>},<br/>
+		<span class="tab"></span>"blocked_budget_ids": [<br/>
+		<span class="tab"></span><span class="tab"></span>"6e6ae496-3239-46b6-5144-08dc8c8ba991"<br/>
+		<span class="tab"></span>]<br/>
+		}	
+    </span><br/><br/>
+	
+	<h3>Response values</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Field</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1.</td>
+				<td>statusCode</td>
+				<td>Response HTTP status code </td>
+			</tr>
+			<tr>
+				<td>2.</td>
+				<td>message</td>
+				<td>Human readable error message</td>
+			</tr>
+			<tr>
+				<td>3.</td>
+				<td>xproxy_error <i>(optional)</i></td>
+				<td>Object containing additional information about the error</td>
+			</tr>
+			<tr>
+				<td>3.1</td>
+				<td><span class="tab"></span>code</td>
+				<td>Unique error code string</td>
+			</tr>
+			<tr>
+				<td>3.2</td>
+				<td><span class="tab"></span>message</td>
+				<td>Human readable error message</td>
+			</tr>
+			<tr>
+				<td>4.</td>
+				<td>xproxy_result <i>(optional)</i> </td>
+				<td>See <a href="#xproxy_result">xproxy_result</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	</br>
+	For instance, an error response to a blocked budget will return all properties (statusCode, message, xproxy_result, xproxy_error) while an error response to a malformed URL path will only return the required ones. 
+	When handling an error response and xproxy_error is present, xproxy_error.code will indicate the specific error that occurred and allow you to take appropriate action.
+	
+	<h2>Python SDKs</h2>
+	All of the supported model provider SDKs will raise an APIStatusError exception when processing a failed request.  
+	Note that these SDKs will raise exceptions independent of Pay-I as a proxy, so it is a good defensive practice to handle these exceptions in your code. For example the following call to 
+
+	</br></br>
+
+	For instance the messages.create call should be in a try block to handle the exception:
+
+</br></br>
+	<code>
+		#TODO make pretty</br>
+payi_base_url = "https://api.pay-i.com/api/v1/proxy/anthropic/"</br>
+
+client = anthropic.Anthropic(</br>
+    base_url = payi_base_url,</br>
+    auth_token = payi_api_key,</br>
+    default_headers=payi_headers</br>
+)</br>
+
+try:</br>
+	message = client.messages.create(</br>
+		model="claude-3-5-sonnet-20240620",</br>
+		max_tokens=500,</br>
+		messages=[</br>
+			{</br>
+				"role": "user",</br>
+				"content": [</br>
+					{</br>
+						"type": "text",</br>
+						"text": "Say 'this is a test'"</br>
+					}</br>
+				]</br>
+			}</br>
+		]</br>
+	)</br>
+except anthropic.APIStatusError as e:</br>
+    response = e.response.json()</br>
+	</code>
+
+	response will contain both Anthropic's ("type", "error") and Pay-i's ("statusCode", "message", "xproxy_error") error response values.
+
+<code>
+	print(json.dumps(response, indent=4))</br>
+	</br>
+	{</br>
+		"type": "error",</br>
+		"error": {</br>
+			"type": "authentication_error",</br>
+			"message": "invalid x-api-key"</br>
+		},</br>
+		"xproxy_error": {</br>
+			"code": "provider_error",</br>
+			"message": "The downstream provider returned an error."</br>
+		},</br>
+		"statusCode": 401,</br>
+		"message": "The downstream provider returned an error."</br>
+	}</br>
+</code>
+
 	<h2>Supported Providers and Models</h2>
 	<table>
         <thead>
