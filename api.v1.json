@@ -1294,8 +1294,7 @@
             "format": "double"
           },
           "currency": {
-            "minLength": 1,
-            "type": "string"
+            "$ref": "#/components/schemas/PayI.Common.Enums.Currency"
           },
           "budget_type": {
             "$ref": "#/components/schemas/PayI.Common.Data.BudgetManagement.Enums.BudgetType"
@@ -1331,7 +1330,7 @@
             "type": "string",
             "nullable": true
           },
-          "reset_date": {
+          "budget_reset_timestamp": {
             "type": "string",
             "format": "date-time"
           },
@@ -1489,6 +1488,9 @@
             "exclusiveMinimum": true,
             "type": "number",
             "format": "double"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/PayI.Common.Enums.Currency"
           },
           "budget_type": {
             "$ref": "#/components/schemas/PayI.Common.Data.BudgetManagement.Enums.BudgetType"
@@ -1665,39 +1667,57 @@
       },
       "PayI.Common.Data.BudgetManagement.Enums.BaseCostEstimate": {
         "enum": [
-          "Max"
+          "max"
         ],
         "type": "string"
       },
       "PayI.Common.Data.BudgetManagement.Enums.BudgetResponseType": {
         "enum": [
-          "Block",
-          "Allow"
+          "block",
+          "allow"
+        ],
+        "type": "string"
+      },
+      "PayI.Common.Data.BudgetManagement.Enums.BudgetStatus": {
+        "enum": [
+          "ok",
+          "blocked",
+          "blocked_external",
+          "exceeded",
+          "failed"
         ],
         "type": "string"
       },
       "PayI.Common.Data.BudgetManagement.Enums.BudgetType": {
         "enum": [
-          "Conservative",
-          "Liberal"
+          "conservative",
+          "liberal"
+        ],
+        "type": "string"
+      },
+      "PayI.Common.Enums.Currency": {
+        "enum": [
+          "usd"
         ],
         "type": "string"
       },
       "PayI.Common.Models.ApiError": {
         "required": [
-          "error_code",
-          "message"
+          "message",
+          "statusCode"
         ],
         "type": "object",
         "properties": {
-          "error_code": {
-            "minLength": 1,
-            "type": "string",
-            "readOnly": true
-          },
           "message": {
             "minLength": 1,
             "type": "string"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xproxy_error": {
+            "$ref": "#/components/schemas/PayI.Common.Models.ProxyError"
           }
         },
         "additionalProperties": false
@@ -1796,22 +1816,38 @@
       },
       "PayI.Common.Models.ProxyApiError": {
         "required": [
-          "error_code",
-          "message"
+          "message",
+          "statusCode"
         ],
         "type": "object",
         "properties": {
-          "error_code": {
-            "minLength": 1,
-            "type": "string",
-            "readOnly": true
-          },
           "message": {
             "minLength": 1,
             "type": "string"
           },
-          "proxy_result": {
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xproxy_error": {
+            "$ref": "#/components/schemas/PayI.Common.Models.ProxyError"
+          },
+          "xproxy_result": {
             "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.FailedProxyResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Common.Models.ProxyError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1851,8 +1887,7 @@
         "type": "object",
         "properties": {
           "state": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/PayI.Common.Data.BudgetManagement.Enums.BudgetStatus"
           }
         },
         "additionalProperties": false
@@ -1861,8 +1896,7 @@
         "type": "object",
         "properties": {
           "currency": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/PayI.Common.Enums.Currency"
           },
           "input": {
             "$ref": "#/components/schemas/PayI.Common.Models.BudgetManagement.CostDetails"
@@ -1939,14 +1973,14 @@
       "description": "Ingest Requests"
     }
   ],
-  "servers": [
-    {
-      "url": "https://api.pay-i.com"
-    }
-  ],
   "security": [
     {
       "Pay_I_API_Key": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://api.pay-i.com"
     }
   ]
 }
