@@ -387,11 +387,11 @@
     <h2>Handling Errors</h2>
     When Pay-i returns an HTTP 4xx status code the body will contain the following properties. statusCode and message properties are always returned while 
 	xproxy_error and xproxy_result are optional and their presence is dependent on the error and endpoint being called. These properties are in addition 
-	to the potential error response values the model provider has returned./br> 
+	to the potential error response values the model provider has returned.
 	
 	<br/><br/>
-    <span class="code-inlne">
-        {<br/>
+    <span class="code-inline">
+		{<br/>
         <span class="tab"></span>"statusCode": 400<br/>
         <span class="tab"></span>"message": "Bad Request"<br/>
 		<span class="tab"></span>"xproxy_error": {<br/>
@@ -412,7 +412,7 @@
 		<span class="tab"></span>"blocked_budget_ids": [<br/>
 		<span class="tab"></span><span class="tab"></span>"6e6ae496-3239-46b6-5144-08dc8c8ba991"<br/>
 		<span class="tab"></span>]<br/>
-		}	
+		}<br/>	
     </span><br/><br/>
 	
 	<h3>Response values</h3>
