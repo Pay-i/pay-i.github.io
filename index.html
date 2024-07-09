@@ -389,7 +389,7 @@
 	xproxy_error and xproxy_result are optional and their presence is dependent on the error and endpoint being called. These properties are in addition 
 	to the potential error response values the model provider has returned./br> 
 	
-	</br></br>
+	<br/><br/>
     <span class="code-inlne">
         {<br/>
         <span class="tab"></span>"statusCode": 400<br/>
@@ -458,7 +458,7 @@
 		</tbody>
 	</table>
 
-	</br>
+	<br/>
 	For instance, an error response to a blocked budget will return all properties (statusCode, message, xproxy_result, xproxy_error) while an error response to a malformed URL path will only return the required ones. 
 	When handling an error response and xproxy_error is present, xproxy_error.code will indicate the specific error that occurred and allow you to take appropriate action.
 	
@@ -466,62 +466,64 @@
 	All of the supported model provider SDKs will raise an APIStatusError exception when processing a failed request.  
 	Note that these SDKs will raise exceptions independent of Pay-I as a proxy, so it is a good defensive practice to handle these exceptions in your code. For example the following call to 
 
-	</br></br>
+	<br/><br/>
 
-	For instance the messages.create call should be in a try block to handle the exception:
+For instance calling messages.create() with an invalid Anthropic key should be in a try block to handle the exception:
 
-</br></br>
-	<code>
-		#TODO make pretty</br>
-payi_base_url = "https://api.pay-i.com/api/v1/proxy/anthropic/"</br>
+<br/><br/>
+<span class="code-inline">
+payi_base_url = "https://api.pay-i.com/api/v1/proxy/anthropic/"<br/>
+<br/>
+client = anthropic.Anthropic(<br/>
+<span class="tab"></span>base_url = payi_base_url,<br/>
+<span class="tab"></span>auth_token = payi_api_key,<br/>
+<span class="tab"></span>default_headers=payi_headers<br/>
+)<br/>
+<br/>
+try:<br/>
+<span class="tab"></span>message = client.messages.create(<br/>
+<span class="tab"></span><span class="tab"></span>model="claude-3-5-sonnet-20240620",<br/>
+<span class="tab"></span><span class="tab"></span>max_tokens=500,<br/>
+<span class="tab"></span><span class="tab"></span>messages=[<br/>
+<span class="tab"></span><span class="tab"></span>{<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span>"role": "user",<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span>"content": [<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span>{<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span><span class="tab"></span>"type": "text",<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span><span class="tab"></span>"text": "Say 'this is a test'"<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span>}<br/>
+<span class="tab"></span><span class="tab"></span><span class="tab"></span>]<br/>
+<span class="tab"></span><span class="tab"></span>}<br/>
+<span class="tab"></span><span class="tab"></span>]<br/>
+<span class="tab"></span>)<br/>
+except anthropic.APIStatusError as e:<br/>
+<span class="tab"></span>response = e.response.json()<br/>
+</span>
+<br/><br/>
 
-client = anthropic.Anthropic(</br>
-    base_url = payi_base_url,</br>
-    auth_token = payi_api_key,</br>
-    default_headers=payi_headers</br>
-)</br>
+response will contain both Anthropic's properties "type" and "error" and with Pay-i' properties "statusCode", "message", "xproxy_error" set as well.
+<br/><br/>
 
-try:</br>
-	message = client.messages.create(</br>
-		model="claude-3-5-sonnet-20240620",</br>
-		max_tokens=500,</br>
-		messages=[</br>
-			{</br>
-				"role": "user",</br>
-				"content": [</br>
-					{</br>
-						"type": "text",</br>
-						"text": "Say 'this is a test'"</br>
-					}</br>
-				]</br>
-			}</br>
-		]</br>
-	)</br>
-except anthropic.APIStatusError as e:</br>
-    response = e.response.json()</br>
-	</code>
+<span class="code-inline">
+> print(json.dumps(response, indent=4))<br/>
+<br/>
+{<br/>
+<span class="tab"></span>"type": "error",<br/>
+<span class="tab"></span>"error": {<br/>
+<span class="tab"></span><span class="tab"></span>"type": "authentication_error",<br/>
+<span class="tab"></span><span class="tab"></span>"message": "invalid x-api-key"<br/>
+<span class="tab"></span>},<br/>
+<span class="tab"></span>"xproxy_error": {<br/>
+<span class="tab"></span><span class="tab"></span>"code": "provider_error",<br/>
+<span class="tab"></span><span class="tab"></span>"message": "The downstream provider returned an error."<br/>
+<span class="tab"></span>},<br/>
+<span class="tab"></span>"statusCode": 401,<br/>
+<span class="tab"></span>"message": "The downstream provider returned an error."<br/>
+}<br/>
+</span>
+<br/><br/>
 
-	response will contain both Anthropic's ("type", "error") and Pay-i's ("statusCode", "message", "xproxy_error") error response values.
-
-<code>
-	print(json.dumps(response, indent=4))</br>
-	</br>
-	{</br>
-		"type": "error",</br>
-		"error": {</br>
-			"type": "authentication_error",</br>
-			"message": "invalid x-api-key"</br>
-		},</br>
-		"xproxy_error": {</br>
-			"code": "provider_error",</br>
-			"message": "The downstream provider returned an error."</br>
-		},</br>
-		"statusCode": 401,</br>
-		"message": "The downstream provider returned an error."</br>
-	}</br>
-</code>
-
-	<h2>Supported Providers and Models</h2>
+<h2>Supported Providers and Models</h2>
 	<table>
         <thead>
             <tr>
