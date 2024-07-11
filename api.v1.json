@@ -44,7 +44,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -63,12 +63,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/azure.openai/openai/deployments/{depoymentName}/chat/completions": {
@@ -117,7 +112,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -136,12 +131,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/azure.openai/openai/deployments/{depoymentName}/embeddings": {
@@ -190,7 +180,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -209,12 +199,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/azure.openai/openai/deployments/{depoymentName}/images/generations": {
@@ -263,7 +248,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -282,12 +267,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/budgets/{budget_id}/tags": {
@@ -310,7 +290,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -335,12 +315,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -376,7 +351,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -401,12 +376,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -442,7 +412,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -467,12 +437,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -493,7 +458,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -518,12 +483,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/budgets/{budget_id}/tags/remove": {
@@ -561,7 +521,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -586,12 +546,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/budgets": {
@@ -649,7 +604,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -671,12 +626,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -701,7 +651,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -723,12 +673,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/budgets/{budget_id}": {
@@ -751,7 +696,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -773,12 +718,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -814,7 +754,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -836,12 +776,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -862,7 +797,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -884,12 +819,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/budgets/{budget_id}/reset": {
@@ -912,7 +842,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -934,12 +864,33 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "operationId": "getCategory",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
-        ]
+        }
       }
     },
     "/api/v1/ingest": {
@@ -985,7 +936,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -999,17 +950,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiError"
+                  "$ref": "#/components/schemas/PayI.Common.Models.ProxyApiError"
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/openai/v1/chat/completions": {
@@ -1050,7 +996,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -1069,12 +1015,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/openai/v1/embeddings": {
@@ -1115,7 +1056,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -1134,12 +1075,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/proxy/openai/v1/images/generations": {
@@ -1180,7 +1116,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -1199,12 +1135,183 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "Pay_I_API_Key": []
+        }
+      }
+    },
+    "/api/v1/categories/resources": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "getCategoryResources",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
-        ]
+        }
+      }
+    },
+    "/api/v1/categories/resource": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "getCategoryResource",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "createResource",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "updateResource",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Resources"
+        ],
+        "operationId": "softDeleteResource",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayI.Calculator.Models.CategoryResourceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     }
   },
@@ -1275,8 +1382,7 @@
         "type": "object",
         "properties": {
           "budget_id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "budget_name": {
             "minLength": 1,
@@ -1320,11 +1426,13 @@
         "additionalProperties": false
       },
       "PayI.BudgetManagement.Models.BudgetHistory": {
+        "required": [
+          "budget_name"
+        ],
         "type": "object",
         "properties": {
           "budget_id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "budget_name": {
             "type": "string",
@@ -1440,6 +1548,42 @@
         },
         "additionalProperties": false
       },
+      "PayI.BudgetManagement.Models.BudgetTransactionData": {
+        "required": [
+          "blocked",
+          "blocked_external",
+          "exceeded",
+          "successful"
+        ],
+        "type": "object",
+        "properties": {
+          "successful": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blocked": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "blocked_external": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "exceeded": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "PayI.BudgetManagement.Models.CostData": {
         "required": [
           "input",
@@ -1522,6 +1666,11 @@
         "additionalProperties": false
       },
       "PayI.BudgetManagement.Models.RequestsData": {
+        "required": [
+          "blocked",
+          "error",
+          "successful"
+        ],
         "type": "object",
         "properties": {
           "successful": {
@@ -1532,15 +1681,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "exceeded": {
-            "type": "integer",
-            "format": "int32"
-          },
           "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "failed": {
             "type": "integer",
             "format": "int32"
           },
@@ -1552,6 +1693,11 @@
         "additionalProperties": false
       },
       "PayI.BudgetManagement.Models.TotalCostData": {
+        "required": [
+          "budget_transactions",
+          "cost",
+          "requests"
+        ],
         "type": "object",
         "properties": {
           "cost": {
@@ -1559,6 +1705,9 @@
           },
           "requests": {
             "$ref": "#/components/schemas/PayI.BudgetManagement.Models.RequestsData"
+          },
+          "budget_transactions": {
+            "$ref": "#/components/schemas/PayI.BudgetManagement.Models.BudgetTransactionData"
           }
         },
         "additionalProperties": false
@@ -1583,7 +1732,112 @@
         },
         "additionalProperties": false
       },
+      "PayI.Calculator.Models.CategoryResourceRequest": {
+        "required": [
+          "aggregate_resource",
+          "category",
+          "price_units",
+          "resource",
+          "resource_type"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "aggregate_resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "resource_type": {
+            "$ref": "#/components/schemas/PayI.Common.Data.Enums.ResourceType"
+          },
+          "price_units": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Calculator.Models.CategoryResourceResponse": {
+        "required": [
+          "api_type",
+          "price_units"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "aggregated_resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "resource_type": {
+            "$ref": "#/components/schemas/PayI.Common.Data.Enums.ResourceType"
+          },
+          "api_type": {
+            "$ref": "#/components/schemas/PayI.Common.Data.Enums.SystemCategoryResourceAPI"
+          },
+          "price_units": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Calculator.Models.CategoryResponse": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "resource_Count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "PayI.Common.Data.BudgetManagement.Entities.Cost": {
+        "required": [
+          "input",
+          "output",
+          "total"
+        ],
         "type": "object",
         "properties": {
           "input": {
@@ -1654,6 +1908,10 @@
         "additionalProperties": false
       },
       "PayI.Common.Data.BudgetManagement.Entities.Totals": {
+        "required": [
+          "cost",
+          "requests"
+        ],
         "type": "object",
         "properties": {
           "cost": {
@@ -1692,6 +1950,28 @@
         "enum": [
           "conservative",
           "liberal"
+        ],
+        "type": "string"
+      },
+      "PayI.Common.Data.Enums.ResourceType": {
+        "enum": [
+          "none",
+          "countbased",
+          "tokenbased"
+        ],
+        "type": "string"
+      },
+      "PayI.Common.Data.Enums.SystemCategoryResourceAPI": {
+        "enum": [
+          "none",
+          "openaichatcompletion",
+          "openaiimagegeneration",
+          "openaiembedding",
+          "anthropicmessages",
+          "azureopenaichatcompletion",
+          "azureopenaiimagegeneration",
+          "azureopenaiembedding",
+          "payiingest"
         ],
         "type": "string"
       },
@@ -1762,13 +2042,13 @@
           },
           "input": {
             "maximum": 2147483647,
-            "minimum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "output": {
             "maximum": 2147483647,
-            "minimum": 1,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           }
@@ -1947,6 +2227,11 @@
       }
     }
   },
+  "security": [
+    {
+      "Pay_I_API_Key": []
+    }
+  ],
   "tags": [
     {
       "name": "OpenAI Requests",
@@ -1971,11 +2256,6 @@
     {
       "name": "Ingest Requests",
       "description": "Ingest Requests"
-    }
-  ],
-  "security": [
-    {
-      "Pay_I_API_Key": []
     }
   ],
   "servers": [
