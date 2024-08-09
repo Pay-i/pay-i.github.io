@@ -40,6 +40,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -108,6 +126,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -176,6 +212,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -244,6 +298,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -558,21 +630,21 @@
         "operationId": "getBudgets",
         "parameters": [
           {
-            "name": "BudgetName",
+            "name": "budget_name",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Tags",
+            "name": "tags",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "PageNumber",
+            "name": "page_number",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -580,7 +652,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "page_size",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -588,14 +660,14 @@
             }
           },
           {
-            "name": "SortBy",
+            "name": "sort_by",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "SortAscending",
+            "name": "sort_ascending",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -1122,6 +1194,288 @@
         }
       }
     },
+    "/api/v1/experiences/types": {
+      "get": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Get all Experience Types",
+        "operationId": "getExperienceTypes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExperienceTypesResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Adds a new experience type. Instances of this type can be created via\r\n/experiences/instance.",
+        "operationId": "createExperienceType",
+        "requestBody": {
+          "description": "Experience details.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.ExperienceTypeRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.ExperienceTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceTypesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/experiences/types/{experience_type_id}": {
+      "get": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Get details for a specific Experience Type",
+        "operationId": "getExperienceType",
+        "parameters": [
+          {
+            "name": "experience_type_id",
+            "in": "path",
+            "description": "Experience type ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceTypesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Updates an existing experience type.",
+        "operationId": "updateExperienceType",
+        "parameters": [
+          {
+            "name": "experience_type_id",
+            "in": "path",
+            "description": "Experience type ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.UpdateExperienceTypeRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayI.Calculator.Models.UpdateExperienceTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceTypesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Deletes an experience type. This will remove visiblity of this type from all\r\ndashboard stats.",
+        "operationId": "deleteExperienceType",
+        "parameters": [
+          {
+            "name": "experience_type_id",
+            "in": "path",
+            "description": "Experience type ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceTypesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/experiences/instances/{experience_instance_id}": {
+      "get": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Get details for an experience instance.",
+        "operationId": "getExperienceInstance",
+        "parameters": [
+          {
+            "name": "experience_instance_id",
+            "in": "path",
+            "description": "Experience instance ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceInstanceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Deletes an experience instance. This will remove all costs associated with this\r\nexperience instance.",
+        "operationId": "deleteExperienceInstance",
+        "parameters": [
+          {
+            "name": "experience_instance_id",
+            "in": "path",
+            "description": "Experience instance ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceInstanceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/experiences/instances/{experience_type_id}": {
+      "post": {
+        "tags": [
+          "Experiences"
+        ],
+        "summary": "Creates a new experience instance. This ID can then be passed into router calls\r\nfor a specific user experience.",
+        "operationId": "newExperienceInstance",
+        "parameters": [
+          {
+            "name": "experience_type_id",
+            "in": "path",
+            "description": "Experience type ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceInstanceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/api/v1/ingest": {
       "post": {
         "tags": [
@@ -1147,6 +1501,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "requestBody": {
@@ -1194,33 +1566,13 @@
         ],
         "summary": "Bulk Ingest",
         "operationId": "requests.BulkIngest",
-        "parameters": [
-          {
-            "name": "xProxy-Budget-IDs",
-            "in": "header",
-            "description": "Comma separated list of budget ID strings",
-            "schema": {
-              "type": "string"
-            },
-            "example": "budgetId1, budgetId_2"
-          },
-          {
-            "name": "xProxy-Request-Tags",
-            "in": "header",
-            "description": "Comma separated list of request tag strings",
-            "schema": {
-              "type": "string"
-            },
-            "example": "requestTag1, request_tag_2"
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.IngestRequest"
+                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.BulkIngestRequest"
                 }
               }
             },
@@ -1228,7 +1580,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.IngestRequest"
+                  "$ref": "#/components/schemas/PayI.Common.Models.ApiRouter.BulkIngestRequest"
                 }
               }
             }
@@ -1292,6 +1644,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -1352,6 +1722,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -1412,6 +1800,24 @@
               "type": "string"
             },
             "example": "requestTag1, request_tag_2"
+          },
+          {
+            "name": "xProxy-User-ID",
+            "in": "header",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "UserName123"
+          },
+          {
+            "name": "xProxy-Experience-InstanceId",
+            "in": "header",
+            "description": "Experience Instance ID",
+            "schema": {
+              "type": "string"
+            },
+            "example": "experience_instance_id"
           }
         ],
         "responses": {
@@ -1438,7 +1844,7 @@
         }
       }
     },
-    "/api/v1/categories/{category}/resources/{resource}/{start_timestamp}": {
+    "/api/v1/categories/{category}/resources/{resource}/{resource_id}": {
       "get": {
         "tags": [
           "Resources"
@@ -1465,13 +1871,12 @@
             }
           },
           {
-            "name": "start_timestamp",
+            "name": "resource_id",
             "in": "path",
-            "description": "Start timestamp",
+            "description": "Resource Id",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
@@ -1517,13 +1922,12 @@
             }
           },
           {
-            "name": "start_timestamp",
+            "name": "resource_id",
             "in": "path",
-            "description": "Start timestamp",
+            "description": "Resource Id",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
@@ -1547,6 +1951,52 @@
   },
   "components": {
     "schemas": {
+      "ExperienceInstanceResponse": {
+        "required": [
+          "experience_instance_id",
+          "request_id"
+        ],
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "experience_instance_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ExperienceTypesResponse": {
+        "required": [
+          "description",
+          "experience_type_id",
+          "name",
+          "request_id"
+        ],
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "experience_type_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PayI.BudgetManagement.Models.ApiQueries.PagedBudgetList": {
         "type": "object",
         "properties": {
@@ -1992,7 +2442,9 @@
       "PayI.Calculator.Models.CategoryResourceResponse": {
         "required": [
           "category",
-          "resource"
+          "resource",
+          "resource_id",
+          "start_timestamp"
         ],
         "type": "object",
         "properties": {
@@ -2011,6 +2463,10 @@
           "max_output_units": {
             "type": "integer",
             "format": "int32"
+          },
+          "resource_id": {
+            "minLength": 1,
+            "type": "string"
           },
           "start_timestamp": {
             "type": "string",
@@ -2046,6 +2502,38 @@
           "start_timestamp": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Calculator.Models.ExperienceTypeRequest": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Calculator.Models.UpdateExperienceTypeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2131,6 +2619,65 @@
           },
           "proxy_result": {
             "$ref": "#/components/schemas/PayI.Common.Models.ProxyResult.SuccessfulProxyResult"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayI.Common.Models.ApiRouter.BulkIngestRequest": {
+        "required": [
+          "category",
+          "input",
+          "output",
+          "resource"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "resource": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "input": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "output": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "event_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "budget_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "request_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "experience_instance_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2266,6 +2813,7 @@
       },
       "PayI.Common.Models.IngestResponse": {
         "required": [
+          "event_timestamp",
           "ingest_timestamp",
           "request_id",
           "xproxy_result"
@@ -2277,6 +2825,10 @@
             "type": "string"
           },
           "ingest_timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "event_timestamp": {
             "type": "string",
             "format": "date-time"
           },
@@ -2456,6 +3008,10 @@
     {
       "name": "Resources",
       "description": "Resources"
+    },
+    {
+      "name": "Experiences",
+      "description": "Experiences"
     }
   ],
   "servers": [
